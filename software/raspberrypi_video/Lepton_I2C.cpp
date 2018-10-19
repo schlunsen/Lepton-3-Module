@@ -64,11 +64,11 @@ void lepton_restart() {
 	}
 	printf("restarting...\n");
 	int res = (int)LEP_RunOemReboot(&_port);
-/*
+
 	if(res != 0) {
 		printf("restart unsuccessful with error: %d\n", res);
 	} else {
 		printf("restart successful!\n");
 	}
-*/
+
 }
