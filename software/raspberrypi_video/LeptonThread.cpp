@@ -254,3 +254,7 @@ void LeptonThread::performFFC() {
 void LeptonThread::restart() {
 	lepton_restart();
 }
+
+void LeptonThread::disable_agc() {
+	lepton_disable_agc();
+}

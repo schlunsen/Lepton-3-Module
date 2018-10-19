@@ -37,17 +37,22 @@ int main( int argc, char **argv )
 	myLabel.setGeometry(10, 10, ImageWidth, ImageHeight);
 	myLabel.setPixmap(QPixmap::fromImage(myImage));
 
+	int numberOfButtons = 4;
 	//create a FFC button
 	QPushButton *button1 = new QPushButton("FFC", myWidget);
-	button1->setGeometry(ImageWidth/3-100, WindowHeight-35, 100, 30);
+	button1->setGeometry(ImageWidth/numberOfButtons-100, WindowHeight-35, 100, 30);
 	
 	//create a Snapshot button
 	QPushButton *button2 = new QPushButton("Capture", myWidget);
-	button2->setGeometry(ImageWidth/3+10, WindowHeight-35, 100, 30);
+	button2->setGeometry(ImageWidth/numberOfButtons+10, WindowHeight-35, 100, 30);
 	
 	//create a reset button
 	QPushButton *button3 = new QPushButton("Restart", myWidget);
-	button3->setGeometry(ImageWidth/3+120, WindowHeight-35, 100, 30);
+	button3->setGeometry(ImageWidth/numberOfButtons+120, WindowHeight-35, 100, 30);
+
+	//create a disable AGC button
+	QPushButton *button4 = new QPushButton("Disable AGC", myWidget);
+	button3->setGeometry(ImageWidth/numberOfButtons+120, WindowHeight-35, 100, 30);
 
 	//create a thread to gather SPI data
 	//when the thread emits updateImage, the label should update its image accordingly
@@ -60,6 +65,9 @@ int main( int argc, char **argv )
 	QObject::connect(button2, SIGNAL(clicked()), thread, SLOT(snapshot()));
 	//connect restart button to the thread's restart action
 	QObject::connect(button3, SIGNAL(clicked()), thread, SLOT(restart()));
+
+	//connect restart button to the thread's restart action
+	QObject::connect(button4, SIGNAL(clicked()), thread, SLOT(disable_agc()));
 
 	thread->start();
 	

@@ -72,3 +72,24 @@ void lepton_restart() {
 	}
 
 }
+
+void lepton_disable_agc() {
+	if(!_connected) {
+		int res = lepton_connect();
+		if (res != 0) {
+			//check SDA and SCL lines if you get this error
+			printf("I2C could not connect\n");
+			printf("error code: %d\n", res);
+		}
+	}
+	printf("Disable AGC...\n");
+	
+	int res = (int)LEP_SetAgcEnableState(&_port, 0);
+
+	if(res != 0) {
+		printf("Disable AGC unsuccessful with error: %d\n", res);
+	} else {
+		printf("Disable AGC successful!\n");
+	}
+}
+
