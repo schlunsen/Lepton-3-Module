@@ -8,6 +8,7 @@
 #include <QtDebug>
 #include <QString>
 #include <QPushButton>
+#include <QComboBox>
 
 #include "LeptonThread.h"
 #include "MyLabel.h"
@@ -17,7 +18,7 @@ int main( int argc, char **argv )
 {
 	
 	int WindowWidth = 340;
-	int WindowHeight = 290;
+	int WindowHeight = 340;
 	int ImageWidth = 320;
 	int ImageHeight = 240;
 
@@ -37,6 +38,8 @@ int main( int argc, char **argv )
 	myLabel.setGeometry(10, 10, ImageWidth, ImageHeight);
 	myLabel.setPixmap(QPixmap::fromImage(myImage));
 
+
+
 	int numberOfButtons = 4;
 	//create a FFC button
 	QPushButton *button1 = new QPushButton("FFC", myWidget);
@@ -52,7 +55,27 @@ int main( int argc, char **argv )
 
 	//create a disable AGC button
 	QPushButton *button4 = new QPushButton("Disable AGC", myWidget);
-	button3->setGeometry(ImageWidth/numberOfButtons+120, WindowHeight-35, 100, 30);
+	button4->setGeometry(ImageWidth/numberOfButtons+120, WindowHeight-65, 100, 30);
+//
+	// Add combobox
+	QLabel *selectBoxLabel = new QLabel(myWidget);
+	selectBoxLabel->setGeometry(10, WindowHeight -65, 50, 30);
+	selectBoxLabel->setText("Color schema");
+
+	QComboBox *selectBox = new QComboBox(myWidget);
+	selectBox->addItem("Rainbow");
+	selectBox->addItem("Gray Scale");
+	selectBox->addItem("Iron Black");
+	selectBox->addItem("Arctic");
+	selectBox->addItem("Blue Red");
+	selectBox->addItem("Coldest");
+	selectBox->addItem("Contrast");
+	selectBox->addItem("Double Rainbow");
+	selectBox->addItem("Gray Red");
+	selectBox->addItem("Glow bow");
+	selectBox->addItem("Hottest");
+	selectBox->setGeometry(100, WindowHeight -65, 100, 30);
+
 
 	//create a thread to gather SPI data
 	//when the thread emits updateImage, the label should update its image accordingly
@@ -66,7 +89,10 @@ int main( int argc, char **argv )
 	//connect restart button to the thread's restart action
 	QObject::connect(button3, SIGNAL(clicked()), thread, SLOT(restart()));
 
-	//connect restart button to the thread's restart action
+	
+	QObject::connect(selectBox, SIGNAL(currentIndexChanged(int)), thread, SLOT(setColorMap(int)));
+
+	//connect agc button to the thread's restart action
 	QObject::connect(button4, SIGNAL(clicked()), thread, SLOT(disable_agc()));
 
 	thread->start();

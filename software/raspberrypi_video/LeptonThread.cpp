@@ -10,6 +10,8 @@ static const char *device = "/dev/spidev0.0";
 uint8_t mode;
 static uint8_t bits = 8;
 static uint32_t speed = 32000000;
+int selectedColorMap = 0;
+
 int snapshotCount = 0;
 int frame = 0;
 static int raw [120][160];
@@ -17,6 +19,35 @@ static void pabort(const char *s)
 {
 	perror(s);
 	abort();
+}
+
+const int* getColorMap() 
+{
+	if  ( selectedColorMap == 0) 
+		return colormap_rainbow;
+	if  ( selectedColorMap == 1) 
+		return colormap_grayscale;
+	if  ( selectedColorMap == 2) 
+		return colormap_ironblack;
+	if  ( selectedColorMap == 3) 
+		return colormap_blackHot;
+	if  ( selectedColorMap == 4) 
+		return colormap_arctic;
+	if  ( selectedColorMap == 5) 
+		return colormap_blueRed;
+	if  ( selectedColorMap == 6) 
+		return colormap_coldest;
+	if  ( selectedColorMap == 7) 
+		return colormap_contrast;
+	if  ( selectedColorMap == 8) 
+		return colormap_doubleRainbow;
+	if  ( selectedColorMap == 9) 
+		return colormap_grayRed;
+	if  ( selectedColorMap == 10) 
+		return colormap_grayRed;
+	if  ( selectedColorMap == 11) 
+		return colormap_glowBow;
+
 }
 
 LeptonThread::LeptonThread() : QThread()
@@ -166,7 +197,8 @@ void LeptonThread::run()
 		
 			value = (frameBuffer[k] - minValue) * scale;
 			
-			const int *colormap = colormap_ironblack;
+			//const int *colormap = colormap_medical;
+			const int *colormap = getColorMap();
 			color = qRgb(colormap[3*value], colormap[3*value+1], colormap[3*value+2]);
 			
 				if((k/PACKET_SIZE_UINT16) % 2 == 0){//1
@@ -257,4 +289,8 @@ void LeptonThread::restart() {
 
 void LeptonThread::disable_agc() {
 	lepton_disable_agc();
+}
+
+void LeptonThread::setColorMap(int index) {
+	selectedColorMap = index;
 }
